@@ -6,39 +6,54 @@
 <title>RallyStat — 경기 참여</title>
 <style>
   :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
   body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-         background:#0A1322; color:#F4F7FC; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
-  .card { text-align:center; padding:40px 28px; max-width:420px; width:100%; }
+         background:#0A1322; color:#F4F7FC; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+         -webkit-text-size-adjust:100%; word-break:keep-all; overflow-wrap:break-word; }
+  .card { text-align:center; padding:40px 24px; max-width:420px; width:100%; }
   .ball { font-size:44px; }
-  h1 { font-size:22px; margin:14px 0 6px; }
-  p  { color:#96A8C2; font-size:15px; line-height:1.5; margin:6px 0; }
-  .code { display:inline-block; margin:18px 0; padding:14px 26px; border-radius:14px;
+  h1 { font-size:22px; margin:14px 0 10px; }
+  .lead { color:#96A8C2; font-size:15px; line-height:1.55; margin:0 0 4px; }
+  .lead-en { color:#5C6E8A; font-size:13px; line-height:1.5; margin:0; }
+  .code { display:inline-block; margin:22px 0; padding:14px 26px; border-radius:14px;
           background:#14213A; border:1.5px solid #23324D; font-size:30px; font-weight:800;
           letter-spacing:8px; color:#FFD166; }
-  a.btn { display:block; margin:10px auto; padding:15px 20px; border-radius:12px; max-width:320px;
-          font-size:16px; font-weight:700; text-decoration:none; }
+  a.btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+          margin:10px auto; padding:13px 20px; border-radius:12px; max-width:320px;
+          text-decoration:none; }
+  .btn-main { font-size:16px; font-weight:700; }
+  .btn-sub  { font-size:12px; font-weight:600; opacity:.72; }
   .open  { background:#FFB703; color:#0A1322; }
   .store { background:#14213A; color:#F4F7FC; border:1.5px solid #23324D; }
-  .hint { font-size:12.5px; color:#5C6E8A; margin-top:16px; }
+  .hint { font-size:12.5px; color:#5C6E8A; line-height:1.6; margin-top:18px; }
 </style>
 </head>
 <body>
 <div class="card">
   <div class="ball">🏐</div>
   <h1>RallyStat 경기 참여</h1>
-  <p>초대 코드로 라이브 관전 또는 공동 기록에 참여하세요.<br>Join the live board or co-recording with this code.</p>
+  <p class="lead">초대 코드로 라이브 관전 또는 공동 기록에 참여하세요.</p>
+  <p class="lead-en">Join the live board or co-recording with this code.</p>
   <div class="code" id="code">— — — —</div>
-  <a class="btn open" id="openApp" href="#">RallyStat 앱으로 열기 · Open in app</a>
-  <a class="btn store" href="https://apps.apple.com/app/id6790425777">App Store에서 받기 · Get on the App Store</a>
-  <p class="hint">앱이 설치돼 있으면 위 버튼으로 바로 열립니다. 링크가 앱으로 안 열리면 앱 안의 ‘관전’에서 코드를 직접 입력하세요.</p>
+  <a class="btn open" id="openApp" href="#">
+    <span class="btn-main">RallyStat 앱으로 열기</span>
+    <span class="btn-sub">Open in app</span>
+  </a>
+  <a class="btn store" href="https://apps.apple.com/app/id6790425777">
+    <span class="btn-main">App Store에서 받기</span>
+    <span class="btn-sub">Get on the App Store</span>
+  </a>
+  <p class="hint">앱이 설치돼 있으면 위 버튼으로 바로 열립니다.<br>앱으로 안 열리면 앱 안의 ‘관전’에서 코드를 직접 입력하세요.</p>
 </div>
 <script>
+  // ?code= 표시 + 앱 딥링크 구성 (영숫자만 허용)
   var m = (location.search.match(/[?&]code=([A-Za-z0-9]{4,12})/) || [])[1] || '';
   var code = m.toUpperCase();
   if (code) document.getElementById('code').textContent = code;
   var deep = 'volleyball-coach://board/join' + (code ? ('?code=' + code) : '');
   var btn = document.getElementById('openApp');
   btn.href = deep;
+  // 진입 시 1회 자동 시도 (설치돼 있으면 앱이 열림, 없으면 이 페이지에 남음)
   setTimeout(function () { window.location.href = deep; }, 400);
 </script>
 </body>
