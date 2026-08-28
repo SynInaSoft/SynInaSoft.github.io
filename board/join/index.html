@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RallyStat — 경기 참여</title>
+<title>RallyStat — Join the match</title>
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
@@ -13,16 +13,13 @@
   .card { text-align:center; padding:40px 24px; max-width:420px; width:100%; }
   .ball { font-size:44px; }
   h1 { font-size:22px; margin:14px 0 10px; }
-  .lead { color:#96A8C2; font-size:15px; line-height:1.55; margin:0 0 4px; }
-  .lead-en { color:#5C6E8A; font-size:13px; line-height:1.5; margin:0; }
+  .lead { color:#96A8C2; font-size:15px; line-height:1.55; margin:0; }
   .code { display:inline-block; margin:22px 0; padding:14px 26px; border-radius:14px;
           background:#14213A; border:1.5px solid #23324D; font-size:30px; font-weight:800;
           letter-spacing:8px; color:#FFD166; }
-  a.btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
-          margin:10px auto; padding:13px 20px; border-radius:12px; max-width:320px;
-          text-decoration:none; }
-  .btn-main { font-size:16px; font-weight:700; }
-  .btn-sub  { font-size:12px; font-weight:600; opacity:.72; }
+  a.btn { display:flex; align-items:center; justify-content:center;
+          margin:10px auto; padding:15px 20px; border-radius:12px; max-width:320px;
+          font-size:16px; font-weight:700; text-decoration:none; }
   .open  { background:#FFB703; color:#0A1322; }
   .store { background:#14213A; color:#F4F7FC; border:1.5px solid #23324D; }
   .hint { font-size:12.5px; color:#5C6E8A; line-height:1.6; margin-top:18px; }
@@ -31,28 +28,74 @@
 <body>
 <div class="card">
   <div class="ball">🏐</div>
-  <h1>RallyStat 경기 참여</h1>
-  <p class="lead">초대 코드로 라이브 관전 또는 공동 기록에 참여하세요.</p>
-  <p class="lead-en">Join the live board or co-recording with this code.</p>
+  <h1 id="t-h1">Join the RallyStat match</h1>
+  <p class="lead" id="t-lead">Use this invite code to watch live or co-record the match.</p>
   <div class="code" id="code">— — — —</div>
-  <a class="btn open" id="openApp" href="#">
-    <span class="btn-main">RallyStat 앱으로 열기</span>
-    <span class="btn-sub">Open in app</span>
-  </a>
-  <a class="btn store" href="https://apps.apple.com/app/id6790425777">
-    <span class="btn-main">App Store에서 받기</span>
-    <span class="btn-sub">Get on the App Store</span>
-  </a>
-  <p class="hint">앱이 설치돼 있으면 위 버튼으로 바로 열립니다.<br>앱으로 안 열리면 앱 안의 ‘관전’에서 코드를 직접 입력하세요.</p>
+  <a class="btn open" id="openApp" href="#"><span id="t-open">Open in RallyStat</span></a>
+  <a class="btn store" href="https://apps.apple.com/app/id6790425777"><span id="t-store">Get it on the App Store</span></a>
+  <p class="hint"><span id="t-hint1">If the app is installed, the button above opens it right away.</span><br><span id="t-hint2">If it doesn't open, enter the code under 'Watch' in the app.</span></p>
 </div>
 <script>
-  // ?code= 표시 + 앱 딥링크 구성 (영숫자만 허용)
+  // ── 브라우저 언어 감지 → 앱과 동일한 11개 언어 (미지원은 영어) ──
+  var I18N = {
+    ko: { h1:"RallyStat 경기 참여", lead:"초대 코드로 라이브 관전 또는 공동 기록에 참여하세요.",
+          open:"RallyStat 앱으로 열기", store:"App Store에서 받기",
+          hint1:"앱이 설치돼 있으면 위 버튼으로 바로 열립니다.", hint2:"앱으로 안 열리면 앱 안의 ‘관전’에서 코드를 직접 입력하세요." },
+    en: { h1:"Join the RallyStat match", lead:"Use this invite code to watch live or co-record the match.",
+          open:"Open in RallyStat", store:"Get it on the App Store",
+          hint1:"If the app is installed, the button above opens it right away.", hint2:"If it doesn't open, enter the code under 'Watch' in the app." },
+    ja: { h1:"RallyStat 試合に参加", lead:"招待コードでライブ観戦または共同記録に参加できます。",
+          open:"RallyStat アプリで開く", store:"App Store で入手",
+          hint1:"アプリがインストール済みなら、上のボタンですぐ開きます。", hint2:"開かない場合は、アプリ内の「観戦」でコードを入力してください。" },
+    it: { h1:"Partecipa alla partita RallyStat", lead:"Usa questo codice invito per guardare in diretta o co-registrare la partita.",
+          open:"Apri in RallyStat", store:"Scarica dall'App Store",
+          hint1:"Se l'app è installata, il pulsante qui sopra la apre subito.", hint2:"Se non si apre, inserisci il codice in 'Guarda' nell'app." },
+    pl: { h1:"Dołącz do meczu RallyStat", lead:"Użyj tego kodu zaproszenia, aby oglądać na żywo lub współrejestrować mecz.",
+          open:"Otwórz w RallyStat", store:"Pobierz z App Store",
+          hint1:"Jeśli aplikacja jest zainstalowana, powyższy przycisk otworzy ją od razu.", hint2:"Jeśli się nie otwiera, wpisz kod w sekcji „Oglądaj” w aplikacji." },
+    tr: { h1:"RallyStat maçına katıl", lead:"Bu davet koduyla canlı izleyin veya ortak kayda katılın.",
+          open:"RallyStat uygulamasında aç", store:"App Store'dan indir",
+          hint1:"Uygulama yüklüyse yukarıdaki düğme hemen açar.", hint2:"Açılmazsa kodu uygulamadaki 'İzle' bölümüne girin." },
+    pt: { h1:"Participe da partida no RallyStat", lead:"Use este código de convite para assistir ao vivo ou co-registrar a partida.",
+          open:"Abrir no RallyStat", store:"Baixar na App Store",
+          hint1:"Se o app estiver instalado, o botão acima abre na hora.", hint2:"Se não abrir, digite o código em 'Assistir' no app." },
+    ru: { h1:"Присоединяйтесь к матчу RallyStat", lead:"Используйте этот код приглашения, чтобы смотреть матч в прямом эфире или вести совместную запись.",
+          open:"Открыть в RallyStat", store:"Загрузить в App Store",
+          hint1:"Если приложение установлено, кнопка выше откроет его сразу.", hint2:"Если не открывается, введите код в разделе «Смотреть» в приложении." },
+    fr: { h1:"Rejoignez le match RallyStat", lead:"Utilisez ce code d'invitation pour regarder en direct ou co-enregistrer le match.",
+          open:"Ouvrir dans RallyStat", store:"Télécharger sur l'App Store",
+          hint1:"Si l'app est installée, le bouton ci-dessus l'ouvre directement.", hint2:"Si elle ne s'ouvre pas, saisissez le code dans « Regarder » dans l'app." },
+    de: { h1:"RallyStat-Spiel beitreten", lead:"Mit diesem Einladungscode live zuschauen oder gemeinsam aufzeichnen.",
+          open:"In RallyStat öffnen", store:"Im App Store laden",
+          hint1:"Ist die App installiert, öffnet der Button oben sie direkt.", hint2:"Öffnet sie sich nicht, gib den Code in der App unter „Ansehen“ ein." },
+    es: { h1:"Únete al partido de RallyStat", lead:"Usa este código de invitación para ver en vivo o co-registrar el partido.",
+          open:"Abrir en RallyStat", store:"Descargar en el App Store",
+          hint1:"Si la app está instalada, el botón de arriba la abre al instante.", hint2:"Si no se abre, introduce el código en 'Ver' dentro de la app." }
+  };
+  function applyLang(tag) {
+    var p = String(tag).toLowerCase().split('-')[0];
+    var L = I18N[p] || I18N.en;
+    document.documentElement.lang = I18N[p] ? p : 'en';
+    document.title = 'RallyStat — ' + L.h1;
+    document.getElementById('t-h1').textContent = L.h1;
+    document.getElementById('t-lead').textContent = L.lead;
+    document.getElementById('t-open').textContent = L.open;
+    document.getElementById('t-store').textContent = L.store;
+    document.getElementById('t-hint1').textContent = L.hint1;
+    document.getElementById('t-hint2').textContent = L.hint2;
+  }
+  var langs = navigator.languages || [navigator.language || 'en'];
+  for (var i = 0; i < langs.length; i++) {
+    var p = String(langs[i]).toLowerCase().split('-')[0];
+    if (I18N[p]) { applyLang(p); break; }
+  }
+
+  // ── ?code= 표시 + 앱 딥링크 구성 (영숫자만 허용) ──
   var m = (location.search.match(/[?&]code=([A-Za-z0-9]{4,12})/) || [])[1] || '';
   var code = m.toUpperCase();
   if (code) document.getElementById('code').textContent = code;
   var deep = 'volleyball-coach://board/join' + (code ? ('?code=' + code) : '');
-  var btn = document.getElementById('openApp');
-  btn.href = deep;
+  document.getElementById('openApp').href = deep;
   // 진입 시 1회 자동 시도 (설치돼 있으면 앱이 열림, 없으면 이 페이지에 남음)
   setTimeout(function () { window.location.href = deep; }, 400);
 </script>
