@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.syninasoft.volleyballcoach",
+      "sha256_cert_fingerprints": [
+        "4F:D7:93:F3:41:61:12:39:E0:61:4F:4D:CC:AD:D6:D6:AD:91:D7:BC:4C:C8:7C:19:CC:56:29:04:7B:81:D2:DC",
+        "4E:F0:A0:DC:AC:6F:75:05:AD:61:6F:C1:3D:00:B7:29:FE:10:F9:37:5B:D3:6D:83:E6:DD:02:84:41:BE:7C:47"
+      ]
+    }
+  }
+]
