@@ -1,12 +1,27 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.syninasoft.volleyballcoach",
       "sha256_cert_fingerprints": [
         "4A:EF:DA:63:76:A9:BE:28:62:C2:35:2C:72:7C:48:7D:94:FC:77:01:8F:21:48:3A:07:6D:00:AC:AA:17:16:71",
         "4E:F0:A0:DC:AC:6F:75:05:AD:61:6F:C1:3D:00:B7:29:FE:10:F9:37:5B:D3:6D:83:E6:DD:02:84:41:BE:7C:47"
+      ]
+    }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.syninasoft.rallystatbeach",
+      "sha256_cert_fingerprints": [
+        "{{PLAY_SIGNING_SHA256_FROM_APK}}",
+        "{{EAS_UPLOAD_KEY_SHA256}}"
       ]
     }
   }

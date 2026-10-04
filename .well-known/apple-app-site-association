@@ -3,10 +3,32 @@
     "apps": [],
     "details": [
       {
-        "appIDs": ["ULCAK2VRHA.com.syninasoft.volleyballcoach"],
+        "appIDs": [
+          "ULCAK2VRHA.com.syninasoft.volleyballcoach"
+        ],
         "appID": "ULCAK2VRHA.com.syninasoft.volleyballcoach",
-        "paths": ["/board/join*"],
-        "components": [{ "/": "/board/join*" }]
+        "paths": [
+          "/board/join*"
+        ],
+        "components": [
+          {
+            "/": "/board/join*"
+          }
+        ]
+      },
+      {
+        "appIDs": [
+          "ULCAK2VRHA.com.syninasoft.rallystatbeach"
+        ],
+        "appID": "ULCAK2VRHA.com.syninasoft.rallystatbeach",
+        "paths": [
+          "/sandstat/join*"
+        ],
+        "components": [
+          {
+            "/": "/sandstat/join*"
+          }
+        ]
       }
     ]
   }
