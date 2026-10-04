@@ -20,7 +20,7 @@
       "namespace": "android_app",
       "package_name": "com.syninasoft.rallystatbeach",
       "sha256_cert_fingerprints": [
-        "{{PLAY_SIGNING_SHA256_FROM_APK}}",
+        "9E:EE:6C:98:A8:4D:91:14:32:4A:94:A0:03:D3:C6:5D:04:AA:CB:B1:F1:2B:44:7D:4B:C3:8A:B5:27:55:CE:F7",
         "95:94:40:C8:47:28:05:5E:B1:C0:6C:53:E6:66:2A:5F:70:86:E9:26:B2:D2:A1:C4:A5:6D:E8:36:B6:68:57:23"
       ]
     }
