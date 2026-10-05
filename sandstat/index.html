@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- SandStat 랜딩: https://syninasoft.github.io/sandstat/?src=pdf|codesheet|web
+     인쇄물(리포트 PDF·코드표) 하단 링크·QR이 여기로 온다(src/lib/webLinks.ts). src → App Store ct, Play referrer utm_source=sandstat_<src>.
+     추적 스크립트·가격·제3자 상표(FIVB·올림픽 등) 넣지 않는다. -->
+<title>SandStat — beach volleyball score keeper &amp; stats</title>
+<meta name="description" content="Keep score and stats for 2-player beach volleyball from the sideline — one tap per rally. For iPhone, iPad and Android.">
+<link rel="canonical" href="https://syninasoft.github.io/sandstat/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SandStat">
+<meta property="og:url" content="https://syninasoft.github.io/sandstat/">
+<meta property="og:title" content="SandStat — beach volleyball score keeper &amp; stats">
+<meta property="og:description" content="Keep score and stats for 2-player beach volleyball from the sideline — one tap per rally. For iPhone, iPad and Android.">
+<meta property="og:image" content="https://syninasoft.github.io/sandstat/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="SandStat — beach volleyball stats">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SandStat — beach volleyball score keeper &amp; stats">
+<meta name="twitter:description" content="Keep score and stats for 2-player beach volleyball from the sideline — one tap per rally.">
+<meta name="twitter:image" content="https://syninasoft.github.io/sandstat/og.png">
+<meta name="theme-color" content="#0B2430">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background:#0B2430; color:#F2F6F5; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+         -webkit-text-size-adjust:100%; word-break:keep-all; overflow-wrap:break-word; }
+  main { text-align:center; padding:40px 20px 36px; max-width:460px; width:100%; }
+  .ball { font-size:44px; }
+  .wordmark { font-size:10px; letter-spacing:4px; color:#FF7A59; font-weight:800; margin-top:6px; }
+  h1 { font-size:24px; line-height:1.3; margin:14px 0 10px; }
+  .lead { color:#9DBAC2; font-size:15.5px; line-height:1.55; margin:0 0 22px; }
+  a.btn { display:flex; align-items:center; justify-content:center;
+          margin:10px auto; padding:15px 20px; border-radius:12px; max-width:320px;
+          font-size:16px; font-weight:700; text-decoration:none; }
+  .primary { background:#FF7A59; color:#1A0E0A; }
+  .secondary { background:#153A49; color:#F2F6F5; border:1.5px solid #214C5C; }
+  .platforms { font-size:12.5px; color:#5F8290; margin:6px 0 0; }
+  .feats { list-style:none; text-align:left; margin:26px auto 0; padding:6px 16px; max-width:380px;
+           border-radius:12px; background:rgba(21,58,73,.55); border:1px solid #214C5C; }
+  .feats li { position:relative; padding:10px 0 10px 22px; font-size:14px; line-height:1.55; color:#D5E3E6; }
+  .feats li + li { border-top:1px solid rgba(33,76,92,.7); }
+  .feats li::before { content:''; position:absolute; left:2px; top:17px; width:8px; height:8px; border-radius:50%; background:#FFB088; }
+  .note { font-size:12.5px; color:#5F8290; line-height:1.6; margin:16px auto 0; max-width:380px; }
+  .links { margin-top:26px; font-size:14px; color:#5F8290; }
+  .links a { color:#9DBAC2; text-decoration:none; border-bottom:1px solid #214C5C; }
+  footer { margin-top:14px; font-size:12px; color:#5F8290; }
+</style>
+</head>
+<body>
+<main>
+  <div class="ball">🏐</div>
+  <div class="wordmark">SANDSTAT</div>
+  <h1 id="t-h1">SandStat — beach volleyball score keeper &amp; stats</h1>
+  <p class="lead" id="t-lead">Keep score and stats for 2-player beach volleyball from the sideline — one tap per rally.</p>
+
+  <!-- OS별 버튼 구성은 스크립트가 정한다. JS가 없으면 두 스토어 버튼이 그대로 보인다. -->
+  <a class="btn primary" id="iosBtn" href="https://apps.apple.com/app/id6819012693">Download on the App Store</a>
+  <a class="btn primary" id="playBtn" href="https://play.google.com/store/apps/details?id=com.syninasoft.rallystatbeach">Get it on Google Play</a>
+  <p class="platforms" id="t-platforms">iPhone · iPad · Android</p>
+
+  <ul class="feats">
+    <li id="t-f1">Score every rally with one tap and tag the player and the skill — kills, shots, aces, blocks, digs, errors.</li>
+    <li id="t-f2">Built for the beach: two players a side, court-switch reminders, and hard-driven vs. shot stats.</li>
+    <li id="t-f3">Player stats for each match and across matches, plus a PDF match report to share.</li>
+    <li id="t-f4">Live score: turn on broadcast and share the code — family and teammates can follow from anywhere.</li>
+    <li id="t-f5">Works offline, no account needed. Available in 11 languages.</li>
+  </ul>
+  <p class="note" id="t-note">Some features require SandStat Pro, a one-time in-app purchase.</p>
+
+  <nav class="links"><a href="/sandstat/support.html" id="t-support">Support</a> · <a href="/sandstat/privacy.html" id="t-privacy">Privacy Policy</a></nav>
+  <footer>© SynIna Soft</footer>
+</main>
+<script>
+  // App Store Connect 제공자 토큰(pt). 비어 있으면 캠페인 없는 기본 스토어 링크를 쓴다.
+  const PT = '';
+  var APP_ID = '6819012693';
+  var PKG = 'com.syninasoft.rallystatbeach';
+
+  var I18N = {
+    en: { h1:"SandStat — beach volleyball score keeper & stats",
+          lead:"Keep score and stats for 2-player beach volleyball from the sideline — one tap per rally.",
+          store:"Download on the App Store", play:"Get it on Google Play",
+          f1:"Score every rally with one tap and tag the player and the skill — kills, shots, aces, blocks, digs, errors.",
+          f2:"Built for the beach: two players a side, court-switch reminders, and hard-driven vs. shot stats.",
+          f3:"Player stats for each match and across matches, plus a PDF match report to share.",
+          f4:"Live score: turn on broadcast and share the code — family and teammates can follow from anywhere.",
+          f5:"Works offline, no account needed. Available in 11 languages.",
+          note:"Some features require SandStat Pro, a one-time in-app purchase.",
+          support:"Support", privacy:"Privacy Policy" },
+    ko: { h1:"SandStat — 비치발리볼 점수 기록 & 스탯",
+          lead:"2인제 비치발리볼 점수와 스탯을 코트 옆에서 기록하세요 — 랠리당 탭 한 번.",
+          store:"App Store에서 받기", play:"Google Play에서 받기",
+          f1:"랠리마다 탭 한 번으로 점수를 올리고, 누가 어떤 기술로 냈는지 기록 — 강타·샷·서브 에이스·블로킹·디그·범실.",
+          f2:"비치 전용: 팀당 2명, 코트 교대 알림, 강타와 샷을 나눈 스탯.",
+          f3:"경기별·누적 선수 스탯과 공유용 경기 리포트 PDF.",
+          f4:"라이브 중계: 중계를 켜고 코드를 공유하면 가족과 팀원이 어디서든 실시간으로 볼 수 있어요.",
+          f5:"오프라인으로 동작하고 계정이 필요 없어요. 11개 언어 지원.",
+          note:"일부 기능은 SandStat Pro(1회 인앱 구매)가 필요합니다.",
+          support:"지원", privacy:"개인정보처리방침" }
+  };
+  var L = I18N.en, lang = 'en';
+  var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'];
+  for (var i = 0; i < langs.length; i++) {
+    var p = String(langs[i]).toLowerCase().split('-')[0];
+    if (I18N[p]) { L = I18N[p]; lang = p; break; }
+  }
+  function $(id) { return document.getElementById(id); }
+  document.documentElement.lang = lang;
+  document.title = L.h1;
+  var keys = ['h1', 'lead', 'f1', 'f2', 'f3', 'f4', 'f5', 'note', 'support', 'privacy'];
+  for (var k = 0; k < keys.length; k++) $('t-' + keys[k]).textContent = L[keys[k]];
+  $('iosBtn').textContent = L.store;
+  $('playBtn').textContent = L.play;
+
+  // ── ?src= → App Store ct / Play referrer (영소문자·숫자·_ 20자까지, 없거나 이상하면 web) ──
+  var m = location.search.match(/[?&]src=([A-Za-z0-9_]{1,20})(?:&|$)/);
+  var src = m ? m[1].toLowerCase() : 'web';
+  $('iosBtn').href = PT
+    ? 'https://apps.apple.com/app/apple-store/id' + APP_ID + '?pt=' + encodeURIComponent(PT) + '&ct=' + encodeURIComponent(src) + '&mt=8'
+    : 'https://apps.apple.com/app/id' + APP_ID;
+  $('playBtn').href = 'https://play.google.com/store/apps/details?id=' + PKG + '&referrer=' +
+    encodeURIComponent('utm_source=sandstat_' + src + '&utm_medium=landing&utm_campaign=landing');
+
+  // ── OS별: iOS는 App Store만, Android는 Google Play만, 그 외(데스크톱)는 둘 다 ──
+  var ua = navigator.userAgent || '';
+  var isAndroid = /Android/i.test(ua);
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isIOS) $('playBtn').hidden = true;
+  else if (isAndroid) $('iosBtn').hidden = true;
+</script>
+</body>
+</html>
