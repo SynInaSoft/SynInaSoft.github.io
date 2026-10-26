@@ -33,6 +33,7 @@
   <div class="code" id="code">— — — —</div>
   <a class="btn open" id="openApp" href="#"><span id="t-open">Open in RallyStat</span></a>
   <a class="btn store" id="storeBtn" href="https://apps.apple.com/app/id6790425777"><span id="t-store">Get it on the App Store</span></a>
+  <a class="btn store" id="playBtn" href="https://play.google.com/store/apps/details?id=com.syninasoft.volleyballcoach"><span id="t-play">Get it on Google Play</span></a>
   <p class="hint"><span id="t-hint1">If the app is installed, the button above opens it right away.</span><br><span id="t-hint2">If it doesn't open, enter the code in the app under Settings → Watch live.</span></p>
 </div>
 <script>
@@ -80,15 +81,15 @@
     document.getElementById('t-h1').textContent = L.h1;
     document.getElementById('t-lead').textContent = L.lead;
     document.getElementById('t-open').textContent = L.open;
-    // Android 브라우저면 Google Play 링크·문구로 (그 외는 App Store)
-    var isAndroid = /Android/i.test(navigator.userAgent);
-    document.getElementById('t-store').textContent = isAndroid ? (L.play || L.store) : L.store;
-    document.getElementById('storeBtn').href = isAndroid
-      ? 'https://play.google.com/store/apps/details?id=com.syninasoft.volleyballcoach'
-      : 'https://apps.apple.com/app/id6790425777';
+    document.getElementById('t-store').textContent = L.store;
+    document.getElementById('t-play').textContent = L.play || I18N.en.play;
     document.getElementById('t-hint1').textContent = L.hint1;
     document.getElementById('t-hint2').textContent = L.hint2;
   }
+  // 스토어 버튼: Android는 Google Play만, iPhone·iPad는 App Store만, 그 외(PC 등)는 둘 다
+  var ua = navigator.userAgent;
+  if (/Android/i.test(ua)) document.getElementById('storeBtn').style.display = 'none';
+  else if (/iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) document.getElementById('playBtn').style.display = 'none';
   var langs = navigator.languages || [navigator.language || 'en'];
   for (var i = 0; i < langs.length; i++) {
     var p = String(langs[i]).toLowerCase().split('-')[0];
