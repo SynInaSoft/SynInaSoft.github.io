@@ -29,6 +29,20 @@
             "/": "/sandstat/join*"
           }
         ]
+      },
+      {
+        "appIDs": [
+          "ULCAK2VRHA.com.uninane.rallyboard"
+        ],
+        "appID": "ULCAK2VRHA.com.uninane.rallyboard",
+        "paths": [
+          "/rallyboard-web/play*"
+        ],
+        "components": [
+          {
+            "/": "/rallyboard-web/play*"
+          }
+        ]
       }
     ]
   }

@@ -24,5 +24,18 @@
         "95:94:40:C8:47:28:05:5E:B1:C0:6C:53:E6:66:2A:5F:70:86:E9:26:B2:D2:A1:C4:A5:6D:E8:36:B6:68:57:23"
       ]
     }
+  },
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.uninane.rallyboard",
+      "sha256_cert_fingerprints": [
+        "B4:A7:31:F7:A7:AB:9B:C8:29:15:48:2E:7A:EE:D4:CA:B6:47:A9:EA:BD:9F:A0:A9:35:FC:06:24:2B:A7:DD:FB",
+        "36:62:80:3D:8C:69:06:B0:38:A4:9A:88:9D:5E:8D:90:E6:6B:C1:F0:70:0D:31:57:0F:53:83:3D:36:BA:EE:00"
+      ]
+    }
   }
 ]
