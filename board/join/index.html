@@ -2,108 +2,337 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RallyStat — Join the match</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>RallyStat — Live score</title>
 <style>
-  :root { color-scheme: dark; }
+  :root { color-scheme: dark; --bg:#0A1322; --card:#14213A; --line:#23324D; --ink:#F4F7FC;
+          --soft:#96A8C2; --faint:#5C6E8A; --amber:#FFB703; --gold:#FFD166; --live:#FF5A5F;
+          --ca:#4EA8FF; --cb:#FF8A4C; }
   * { box-sizing: border-box; }
-  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-         background:#0A1322; color:#F4F7FC; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-         -webkit-text-size-adjust:100%; word-break:keep-all; overflow-wrap:break-word; }
-  .card { text-align:center; padding:40px 24px; max-width:420px; width:100%; }
-  .ball { font-size:44px; }
-  h1 { font-size:22px; margin:14px 0 10px; }
-  .lead { color:#96A8C2; font-size:15px; line-height:1.55; margin:0; }
-  .code { display:inline-block; margin:22px 0; padding:14px 26px; border-radius:14px;
-          background:#14213A; border:1.5px solid #23324D; font-size:30px; font-weight:800;
-          letter-spacing:8px; color:#FFD166; }
-  a.btn { display:flex; align-items:center; justify-content:center;
-          margin:10px auto; padding:15px 20px; border-radius:12px; max-width:320px;
-          font-size:16px; font-weight:700; text-decoration:none; }
-  .open  { background:#FFB703; color:#0A1322; }
-  .store { background:#14213A; color:#F4F7FC; border:1.5px solid #23324D; }
-  .hint { font-size:12.5px; color:#5C6E8A; line-height:1.6; margin-top:18px; }
+  html, body { margin:0; background:var(--bg); }
+  body { min-height:100vh; display:flex; justify-content:center; color:var(--ink);
+         font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+         -webkit-text-size-adjust:100%; word-break:keep-all; overflow-wrap:anywhere; }
+  .wrap { width:100%; max-width:520px; padding:28px 16px 40px; }
+  .brand { display:flex; align-items:center; gap:8px; color:var(--soft); font-size:14px; font-weight:700; }
+  .pill { margin-left:auto; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:800; letter-spacing:.5px;
+          background:#2A1620; color:var(--live); display:none; }
+  .pill.final { background:#1C2A42; color:var(--soft); }
+  .pill .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--live); margin-right:6px;
+               vertical-align:1px; animation:blink 1.4s infinite; }
+  @keyframes blink { 50% { opacity:.25; } }
+  .board { margin-top:16px; background:var(--card); border:1.5px solid var(--line); border-radius:18px; padding:18px 14px 16px; display:none; }
+  .setno { text-align:center; color:var(--soft); font-size:13px; font-weight:700; }
+  .row { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; margin-top:12px; }
+  .team { text-align:center; min-width:0; }
+  .tname { font-size:16px; font-weight:800; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .tbar { height:4px; width:36px; border-radius:2px; margin:0 auto 8px; }
+  .score { font-size:64px; font-weight:900; line-height:1.05; font-variant-numeric:tabular-nums; margin-top:6px; }
+  .serve { height:20px; margin-top:4px; font-size:12px; font-weight:800; color:var(--gold); visibility:hidden; }
+  .serve.on { visibility:visible; }
+  .mid { text-align:center; color:var(--soft); }
+  .sets { font-size:26px; font-weight:900; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .setsl { font-size:11px; font-weight:700; margin-top:2px; }
+  .chips { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; margin-top:14px; }
+  .chip { padding:5px 10px; border-radius:8px; background:#0F1A2E; border:1px solid var(--line); font-size:13px;
+          font-weight:700; color:var(--soft); font-variant-numeric:tabular-nums; }
+  .chip.cur { color:var(--gold); border-color:#5A4A1E; }
+  .top { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; border-top:1px solid var(--line); padding-top:12px; }
+  .top h3 { margin:0 0 6px; font-size:11px; color:var(--faint); font-weight:800; text-align:center; }
+  .top ol { list-style:none; margin:0; padding:0; font-size:13px; color:var(--soft); }
+  .top li { display:flex; justify-content:space-between; gap:6px; padding:2px 4px; }
+  .top li b { color:var(--ink); font-variant-numeric:tabular-nums; }
+  .top li span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .meta { text-align:center; color:var(--faint); font-size:12px; margin-top:12px; min-height:16px; }
+  .meta.warn { color:var(--gold); }
+  .msg { margin-top:16px; text-align:center; background:var(--card); border:1.5px solid var(--line); border-radius:18px; padding:22px 16px; display:none; }
+  .msg p { margin:0; color:var(--soft); font-size:15px; line-height:1.55; }
+  .guide { text-align:center; margin-top:28px; }
+  .guide h1 { font-size:20px; margin:0 0 8px; }
+  .lead { color:var(--soft); font-size:14.5px; line-height:1.55; margin:0; }
+  .code { display:inline-block; margin:16px 0 6px; padding:10px 22px; border-radius:12px; background:var(--card);
+          border:1.5px solid var(--line); font-size:24px; font-weight:800; letter-spacing:6px; color:var(--gold); }
+  a.btn { display:flex; align-items:center; justify-content:center; margin:10px auto; padding:14px 18px; border-radius:12px;
+          max-width:340px; font-size:15.5px; font-weight:700; text-decoration:none; text-align:center; }
+  .open  { background:var(--amber); color:var(--bg); }
+  .store { background:var(--card); color:var(--ink); border:1.5px solid var(--line); }
+  .hint { font-size:12.5px; color:var(--faint); line-height:1.6; margin-top:14px; }
+  @media (max-width:360px) { .score { font-size:52px; } .sets { font-size:22px; } .tname { font-size:15px; } }
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="ball">🏐</div>
-  <h1 id="t-h1">Join the RallyStat match</h1>
-  <p class="lead" id="t-lead">Use this invite code to watch live or co-record the match.</p>
-  <div class="code" id="code">— — — —</div>
-  <a class="btn open" id="openApp" href="#"><span id="t-open">Open in RallyStat</span></a>
-  <a class="btn store" id="storeBtn" href="https://apps.apple.com/app/id6790425777"><span id="t-store">Get it on the App Store</span></a>
-  <a class="btn store" id="playBtn" href="https://play.google.com/store/apps/details?id=com.syninasoft.volleyballcoach"><span id="t-play">Get it on Google Play</span></a>
-  <p class="hint"><span id="t-hint1">If the app is installed, the button above opens it right away.</span><br><span id="t-hint2">If it doesn't open, enter the code in the app under Settings → Watch live.</span></p>
+<div class="wrap">
+  <div class="brand"><span>🏐 RallyStat</span><span class="pill" id="pill"></span></div>
+
+  <!-- 실시간 점수판 (관전 코드가 유효할 때만 보임) -->
+  <section class="board" id="board" aria-live="polite">
+    <div class="setno" id="setno"></div>
+    <div class="row">
+      <div class="team"><div class="tbar" id="barL"></div><div class="tname" id="nameL"></div>
+        <div class="score" id="scoreL">0</div><div class="serve" id="serveL"></div></div>
+      <div class="mid"><div class="sets" id="sets">0 : 0</div><div class="setsl" id="setsl"></div></div>
+      <div class="team"><div class="tbar" id="barR"></div><div class="tname" id="nameR"></div>
+        <div class="score" id="scoreR">0</div><div class="serve" id="serveR"></div></div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="top" id="top" style="display:none">
+      <div><h3 id="topL"></h3><ol id="listL"></ol></div>
+      <div><h3 id="topR"></h3><ol id="listR"></ol></div>
+    </div>
+    <div class="meta" id="meta"></div>
+  </section>
+
+  <!-- 불러오는 중 / 끝남 / 못 찾음 -->
+  <section class="msg" id="msg"><p id="msgText"></p></section>
+
+  <!-- 앱 안내 (점수판 아래) -->
+  <section class="guide" id="guide">
+    <h1 id="t-h1">Join the RallyStat match</h1>
+    <p class="lead" id="t-lead">Use this invite code to watch live or co-record the match.</p>
+    <div class="code" id="code">— — — —</div>
+    <a class="btn open" id="openApp" href="#"><span id="t-open">Open in RallyStat</span></a>
+    <a class="btn store" id="storeBtn" href="https://apps.apple.com/app/id6790425777"><span id="t-store">Get it on the App Store</span></a>
+    <a class="btn store" id="playBtn" href="https://play.google.com/store/apps/details?id=com.syninasoft.volleyballcoach"><span id="t-play">Get it on Google Play</span></a>
+    <p class="hint"><span id="t-hint1">If the app is installed, the button above opens it right away.</span><br><span id="t-hint2">If it doesn't open, enter the code in the app under Settings → Watch live.</span></p>
+  </section>
 </div>
 <script>
-  // ── 브라우저 언어 감지 → 앱과 동일한 11개 언어 (미지원은 영어) ──
+  // ── 앱과 같은 11개 언어 (src/i18n/translations.ts Lang). 미지원은 영어 ──
   var I18N = {
     ko: { h1:"RallyStat 경기 참여", lead:"초대 코드로 라이브 관전 또는 공동 기록에 참여하세요.",
           open:"RallyStat 앱으로 열기", store:"App Store에서 받기", play:"Google Play에서 받기",
-          hint1:"앱이 설치돼 있으면 위 버튼으로 바로 열립니다.", hint2:"앱으로 안 열리면 앱의 설정 → 라이브 관전에서 코드를 직접 입력하세요." },
+          hint1:"앱이 설치돼 있으면 위 버튼으로 바로 열립니다.", hint2:"앱으로 안 열리면 앱의 설정 → 라이브 관전에서 코드를 직접 입력하세요.",
+          appH1:"앱에서 더 자세히 보기", appLead:"RallyStat 앱에서는 선수별 기록과 점수 흐름까지 볼 수 있어요.",
+          live:"LIVE", final:"경기 종료", setN:"{n}세트", target:"{t}점", sets:"세트 스코어", serve:"● 서브",
+          top:"득점", updated:"{t} 갱신", offline:"연결이 불안정해요 — 다시 시도하는 중",
+          loading:"점수를 불러오는 중…", ended:"이 경기의 중계가 꺼졌어요.", notFound:"이 코드로 진행 중인 중계를 찾지 못했어요. 코드를 다시 확인해 주세요.",
+          title:"실시간 점수" },
     en: { h1:"Join the RallyStat match", lead:"Use this invite code to watch live or co-record the match.",
           open:"Open in RallyStat", store:"Get it on the App Store", play:"Get it on Google Play",
-          hint1:"If the app is installed, the button above opens it right away.", hint2:"If it doesn't open, enter the code in the app under Settings → Watch live." },
+          hint1:"If the app is installed, the button above opens it right away.", hint2:"If it doesn't open, enter the code in the app under Settings → Watch live.",
+          appH1:"See more in the app", appLead:"The RallyStat app also shows per-player stats and the scoring flow.",
+          live:"LIVE", final:"Final", setN:"Set {n}", target:"to {t}", sets:"Sets", serve:"● Serving",
+          top:"Points", updated:"Updated {t}", offline:"Connection unstable — retrying",
+          loading:"Loading the score…", ended:"Live sharing for this match has been turned off.", notFound:"No live match found for this code. Please check the code.",
+          title:"Live score" },
     ja: { h1:"RallyStat 試合に参加", lead:"招待コードでライブ観戦または共同記録に参加できます。",
           open:"RallyStat アプリで開く", store:"App Store で入手", play:"Google Play で入手",
-          hint1:"アプリがインストール済みなら、上のボタンですぐ開きます。", hint2:"開かない場合は、アプリの設定→ライブ観戦でコードを入力してください。" },
+          hint1:"アプリがインストール済みなら、上のボタンですぐ開きます。", hint2:"開かない場合は、アプリの設定→ライブ観戦でコードを入力してください。",
+          appH1:"アプリでもっと詳しく", appLead:"RallyStatアプリでは選手別の記録や得点の流れまで見られます。",
+          live:"LIVE", final:"試合終了", setN:"第{n}セット", target:"{t}点", sets:"セットカウント", serve:"● サーブ",
+          top:"得点", updated:"{t} 更新", offline:"接続が不安定です — 再試行中",
+          loading:"スコアを読み込み中…", ended:"この試合の中継はオフになりました。", notFound:"このコードの中継が見つかりません。コードをご確認ください。",
+          title:"ライブスコア" },
     it: { h1:"Partecipa alla partita RallyStat", lead:"Usa questo codice invito per guardare in diretta o co-registrare la partita.",
           open:"Apri in RallyStat", store:"Scarica dall'App Store", play:"Scarica da Google Play",
-          hint1:"Se l'app è installata, il pulsante qui sopra la apre subito.", hint2:"Se non si apre, inserisci il codice nell'app in Impostazioni → Guarda in diretta." },
+          hint1:"Se l'app è installata, il pulsante qui sopra la apre subito.", hint2:"Se non si apre, inserisci il codice nell'app in Impostazioni → Guarda in diretta.",
+          appH1:"Più dettagli nell'app", appLead:"L'app RallyStat mostra anche le statistiche per giocatore e l'andamento del punteggio.",
+          live:"LIVE", final:"Finale", setN:"Set {n}", target:"a {t}", sets:"Set", serve:"● Al servizio",
+          top:"Punti", updated:"Aggiornato {t}", offline:"Connessione instabile — nuovo tentativo",
+          loading:"Caricamento del punteggio…", ended:"La diretta di questa partita è stata disattivata.", notFound:"Nessuna diretta trovata per questo codice. Controlla il codice.",
+          title:"Punteggio live" },
     pl: { h1:"Dołącz do meczu RallyStat", lead:"Użyj tego kodu zaproszenia, aby oglądać na żywo lub współrejestrować mecz.",
           open:"Otwórz w RallyStat", store:"Pobierz z App Store", play:"Pobierz z Google Play",
-          hint1:"Jeśli aplikacja jest zainstalowana, powyższy przycisk otworzy ją od razu.", hint2:"Jeśli się nie otwiera, wpisz kod w aplikacji: Ustawienia → Oglądaj na żywo." },
+          hint1:"Jeśli aplikacja jest zainstalowana, powyższy przycisk otworzy ją od razu.", hint2:"Jeśli się nie otwiera, wpisz kod w aplikacji: Ustawienia → Oglądaj na żywo.",
+          appH1:"Więcej w aplikacji", appLead:"Aplikacja RallyStat pokazuje też statystyki zawodników i przebieg wyniku.",
+          live:"LIVE", final:"Koniec", setN:"Set {n}", target:"do {t}", sets:"Sety", serve:"● Serwuje",
+          top:"Punkty", updated:"Aktualizacja {t}", offline:"Niestabilne połączenie — ponawiam",
+          loading:"Wczytywanie wyniku…", ended:"Transmisja tego meczu została wyłączona.", notFound:"Nie znaleziono transmisji dla tego kodu. Sprawdź kod.",
+          title:"Wynik na żywo" },
     tr: { h1:"RallyStat maçına katıl", lead:"Bu davet koduyla canlı izleyin veya ortak kayda katılın.",
           open:"RallyStat uygulamasında aç", store:"App Store'dan indir", play:"Google Play'den indir",
-          hint1:"Uygulama yüklüyse yukarıdaki düğme hemen açar.", hint2:"Açılmazsa kodu uygulamada Ayarlar → Canlı izle bölümüne girin." },
+          hint1:"Uygulama yüklüyse yukarıdaki düğme hemen açar.", hint2:"Açılmazsa kodu uygulamada Ayarlar → Canlı izle bölümüne girin.",
+          appH1:"Uygulamada daha fazlası", appLead:"RallyStat uygulamasında oyuncu istatistiklerini ve skor akışını da görebilirsiniz.",
+          live:"CANLI", final:"Maç bitti", setN:"{n}. set", target:"{t} sayı", sets:"Setler", serve:"● Servis",
+          top:"Sayı", updated:"{t} güncellendi", offline:"Bağlantı zayıf — yeniden deneniyor",
+          loading:"Skor yükleniyor…", ended:"Bu maçın canlı yayını kapatıldı.", notFound:"Bu kodla canlı maç bulunamadı. Lütfen kodu kontrol edin.",
+          title:"Canlı skor" },
     pt: { h1:"Participe da partida no RallyStat", lead:"Use este código de convite para assistir ao vivo ou co-registrar a partida.",
           open:"Abrir no RallyStat", store:"Baixar na App Store", play:"Baixar no Google Play",
-          hint1:"Se o app estiver instalado, o botão acima abre na hora.", hint2:"Se não abrir, digite o código no app em Ajustes → Assistir ao vivo." },
+          hint1:"Se o app estiver instalado, o botão acima abre na hora.", hint2:"Se não abrir, digite o código no app em Ajustes → Assistir ao vivo.",
+          appH1:"Veja mais no app", appLead:"No app RallyStat você também vê as estatísticas por jogador e a evolução do placar.",
+          live:"AO VIVO", final:"Encerrada", setN:"Set {n}", target:"até {t}", sets:"Sets", serve:"● Sacando",
+          top:"Pontos", updated:"Atualizado {t}", offline:"Conexão instável — tentando de novo",
+          loading:"Carregando o placar…", ended:"A transmissão desta partida foi desligada.", notFound:"Nenhuma transmissão encontrada para este código. Confira o código.",
+          title:"Placar ao vivo" },
     ru: { h1:"Присоединяйтесь к матчу RallyStat", lead:"Используйте этот код приглашения, чтобы смотреть матч в прямом эфире или вести совместную запись.",
           open:"Открыть в RallyStat", store:"Загрузить в App Store", play:"Скачать в Google Play",
-          hint1:"Если приложение установлено, кнопка выше откроет его сразу.", hint2:"Если не открывается, введите код в приложении: Настройки → Смотреть онлайн." },
+          hint1:"Если приложение установлено, кнопка выше откроет его сразу.", hint2:"Если не открывается, введите код в приложении: Настройки → Смотреть онлайн.",
+          appH1:"Больше в приложении", appLead:"В приложении RallyStat видна статистика игроков и ход счёта.",
+          live:"LIVE", final:"Матч окончен", setN:"Сет {n}", target:"до {t}", sets:"Сеты", serve:"● Подаёт",
+          top:"Очки", updated:"Обновлено {t}", offline:"Нестабильная связь — повторяем",
+          loading:"Загрузка счёта…", ended:"Трансляция этого матча выключена.", notFound:"Трансляция по этому коду не найдена. Проверьте код.",
+          title:"Счёт онлайн" },
     fr: { h1:"Rejoignez le match RallyStat", lead:"Utilisez ce code d'invitation pour regarder en direct ou co-enregistrer le match.",
           open:"Ouvrir dans RallyStat", store:"Télécharger sur l'App Store", play:"Télécharger sur Google Play",
-          hint1:"Si l'app est installée, le bouton ci-dessus l'ouvre directement.", hint2:"Si elle ne s'ouvre pas, saisissez le code dans l'app via Réglages → Regarder en direct." },
+          hint1:"Si l'app est installée, le bouton ci-dessus l'ouvre directement.", hint2:"Si elle ne s'ouvre pas, saisissez le code dans l'app via Réglages → Regarder en direct.",
+          appH1:"Plus de détails dans l'app", appLead:"L'app RallyStat affiche aussi les stats par joueur et l'évolution du score.",
+          live:"EN DIRECT", final:"Terminé", setN:"Set {n}", target:"en {t}", sets:"Sets", serve:"● Au service",
+          top:"Points", updated:"Mis à jour {t}", offline:"Connexion instable — nouvel essai",
+          loading:"Chargement du score…", ended:"Le direct de ce match a été désactivé.", notFound:"Aucun direct trouvé pour ce code. Vérifiez le code.",
+          title:"Score en direct" },
     de: { h1:"RallyStat-Spiel beitreten", lead:"Mit diesem Einladungscode live zuschauen oder gemeinsam aufzeichnen.",
           open:"In RallyStat öffnen", store:"Im App Store laden", play:"Bei Google Play laden",
-          hint1:"Ist die App installiert, öffnet der Button oben sie direkt.", hint2:"Öffnet sie sich nicht, gib den Code in der App unter Einstellungen → Live zusehen ein." },
+          hint1:"Ist die App installiert, öffnet der Button oben sie direkt.", hint2:"Öffnet sie sich nicht, gib den Code in der App unter Einstellungen → Live zusehen ein.",
+          appH1:"Mehr in der App", appLead:"Die RallyStat-App zeigt auch Spielerstatistiken und den Spielverlauf.",
+          live:"LIVE", final:"Beendet", setN:"Satz {n}", target:"bis {t}", sets:"Sätze", serve:"● Aufschlag",
+          top:"Punkte", updated:"Aktualisiert {t}", offline:"Verbindung instabil — neuer Versuch",
+          loading:"Spielstand wird geladen…", ended:"Die Live-Übertragung dieses Spiels wurde ausgeschaltet.", notFound:"Für diesen Code wurde keine Live-Übertragung gefunden. Bitte Code prüfen.",
+          title:"Live-Spielstand" },
     es: { h1:"Únete al partido de RallyStat", lead:"Usa este código de invitación para ver en vivo o co-registrar el partido.",
           open:"Abrir en RallyStat", store:"Descargar en el App Store", play:"Descargar en Google Play",
-          hint1:"Si la app está instalada, el botón de arriba la abre al instante.", hint2:"Si no se abre, introduce el código en la app en Ajustes → Ver en directo." }
+          hint1:"Si la app está instalada, el botón de arriba la abre al instante.", hint2:"Si no se abre, introduce el código en la app en Ajustes → Ver en directo.",
+          appH1:"Más detalles en la app", appLead:"La app RallyStat también muestra estadísticas por jugador y la evolución del marcador.",
+          live:"EN VIVO", final:"Final", setN:"Set {n}", target:"a {t}", sets:"Sets", serve:"● Saca",
+          top:"Puntos", updated:"Actualizado {t}", offline:"Conexión inestable — reintentando",
+          loading:"Cargando el marcador…", ended:"La retransmisión de este partido se ha desactivado.", notFound:"No se encontró ninguna retransmisión con este código. Revisa el código.",
+          title:"Marcador en vivo" }
   };
-  function applyLang(tag) {
-    var p = String(tag).toLowerCase().split('-')[0];
-    var L = I18N[p] || I18N.en;
-    document.documentElement.lang = I18N[p] ? p : 'en';
-    document.title = 'RallyStat — ' + L.h1;
-    document.getElementById('t-h1').textContent = L.h1;
-    document.getElementById('t-lead').textContent = L.lead;
-    document.getElementById('t-open').textContent = L.open;
-    document.getElementById('t-store').textContent = L.store;
-    document.getElementById('t-play').textContent = L.play || I18N.en.play;
-    document.getElementById('t-hint1').textContent = L.hint1;
-    document.getElementById('t-hint2').textContent = L.hint2;
-  }
-  // 스토어 버튼: Android는 Google Play만, iPhone·iPad는 App Store만, 그 외(PC 등)는 둘 다
-  var ua = navigator.userAgent;
-  if (/Android/i.test(ua)) document.getElementById('storeBtn').style.display = 'none';
-  else if (/iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) document.getElementById('playBtn').style.display = 'none';
+  var L = I18N.en, LANG = 'en';
   var langs = navigator.languages || [navigator.language || 'en'];
   for (var i = 0; i < langs.length; i++) {
     var p = String(langs[i]).toLowerCase().split('-')[0];
-    if (I18N[p]) { applyLang(p); break; }
+    if (I18N[p]) { L = I18N[p]; LANG = p; break; }
+  }
+  document.documentElement.lang = LANG;
+  function $(id) { return document.getElementById(id); }
+  function txt(id, s) { $(id).textContent = s; }
+  function fmt(s, k, v) { return String(s).split('{' + k + '}').join(String(v)); }
+
+  // 안내 문구(기본 = 예전 초대 안내)
+  function guideMode(scoreMode) {
+    txt('t-h1', scoreMode ? L.appH1 : L.h1);
+    txt('t-lead', scoreMode ? L.appLead : L.lead);
+    $('code').style.display = scoreMode ? 'none' : '';
+  }
+  txt('t-open', L.open); txt('t-store', L.store); txt('t-play', L.play);
+  txt('t-hint1', L.hint1); txt('t-hint2', L.hint2);
+  guideMode(false);
+  document.title = 'RallyStat — ' + L.h1;
+  // 스토어 버튼: Android는 Google Play만, iPhone·iPad는 App Store만, 그 외(PC 등)는 둘 다
+  var ua = navigator.userAgent;
+  if (/Android/i.test(ua)) $('storeBtn').style.display = 'none';
+  else if (/iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) $('playBtn').style.display = 'none';
+
+  // ── ?code= (영숫자만) + 앱 딥링크 ──
+  var code = ((location.search.match(/[?&]code=([A-Za-z0-9]{4,12})/) || [])[1] || '').toUpperCase();
+  if (code) txt('code', code);
+  var deep = 'volleyball-coach://board/join' + (code ? ('?code=' + code) : '');
+  $('openApp').href = deep;
+  function tryOpenApp() { setTimeout(function () { window.location.href = deep; }, 400); }
+
+  // ── 실시간 점수 (공개 읽기 RPC — 앱 관전과 같은 board_get_by_code / board_get_bench) ──
+  var SB_URL = 'https://apbtwoxoeumwuszlysug.supabase.co/rest/v1/rpc/';
+  var SB_KEY = 'sb_publishable_QbtFqkyILdRvho9W1XtX8w_8lceZIZh';
+  var ALPHA = /^[23456789ABCDEFGHJKLMNPQRSTUVWXYZ]+$/;
+  var rpc = code.length === 6 ? 'board_get_by_code' : (code.length === 8 ? 'board_get_bench' : null);
+  if (!ALPHA.test(code)) rpc = null;
+  var timer = null, everOk = false, lastSeq = -1, fails = 0, stopped = false;
+
+  function showMsg(s) { $('msg').style.display = s ? 'block' : 'none'; txt('msgText', s || ''); }
+  function color(hex, fb) { return /^#[0-9A-Fa-f]{6}$/.test(hex || '') ? hex : fb; }
+  function clock() {
+    try { return new Date().toLocaleTimeString(LANG, { hour:'2-digit', minute:'2-digit', second:'2-digit' }); }
+    catch (e) { return new Date().toTimeString().slice(0, 8); }
   }
 
-  // ── ?code= 표시 + 앱 딥링크 구성 (영숫자만 허용) ──
-  var m = (location.search.match(/[?&]code=([A-Za-z0-9]{4,12})/) || [])[1] || '';
-  var code = m.toUpperCase();
-  if (code) document.getElementById('code').textContent = code;
-  var deep = 'volleyball-coach://board/join' + (code ? ('?code=' + code) : '');
-  document.getElementById('openApp').href = deep;
-  // 진입 시 1회 자동 시도 (설치돼 있으면 앱이 열림, 없으면 이 페이지에 남음)
-  setTimeout(function () { window.location.href = deep; }, 400);
+  function render(s) {
+    var swap = !!s.swapped;
+    var A = { name: (s.teams && s.teams.a) || 'A', col: color(s.teamColors && s.teamColors.a, '#4EA8FF'), cur: s.set ? s.set.a : 0, won: s.setsWon ? s.setsWon.a : 0, side: 'A' };
+    var B = { name: (s.teams && s.teams.b) || 'B', col: color(s.teamColors && s.teamColors.b, '#FF8A4C'), cur: s.set ? s.set.b : 0, won: s.setsWon ? s.setsWon.b : 0, side: 'B' };
+    var Lt = swap ? B : A, Rt = swap ? A : B;
+    txt('nameL', Lt.name); txt('nameR', Rt.name);
+    $('barL').style.background = Lt.col; $('barR').style.background = Rt.col;
+    txt('scoreL', Lt.cur); txt('scoreR', Rt.cur);
+    txt('sets', Lt.won + ' : ' + Rt.won); txt('setsl', L.sets);
+    var sv = s.st === 'final' ? null : (s.set && s.set.sv);
+    txt('serveL', L.serve); txt('serveR', L.serve);
+    $('serveL').className = 'serve' + (sv === Lt.side ? ' on' : '');
+    $('serveR').className = 'serve' + (sv === Rt.side ? ' on' : '');
+    var n = s.set ? s.set.n : 1;
+    txt('setno', s.st === 'final' ? L.final : (fmt(L.setN, 'n', n) + (s.set && s.set.target ? ' · ' + fmt(L.target, 't', s.set.target) : '')));
+    // 세트별 점수 칩
+    var chips = $('chips'); chips.textContent = '';
+    (s.sets || []).forEach(function (x) {
+      var c = document.createElement('span');
+      c.className = 'chip' + (!x.done && s.st !== 'final' ? ' cur' : '');
+      var l = swap ? x.b : x.a, r = swap ? x.a : x.b;
+      c.textContent = fmt(L.setN, 'n', x.n) + '  ' + l + '–' + r;
+      chips.appendChild(c);
+    });
+    // 득점 상위 3명 — label은 앱에서 이름 표시 설정을 이미 적용한 값("#7 이름" 또는 "#7")
+    var players = Array.isArray(s.players) ? s.players : [];
+    function fill(listId, side) {
+      var ol = $(listId); ol.textContent = '';
+      players.filter(function (p) { return p && p.team === side && p.score > 0; })
+        .sort(function (a, b) { return b.score - a.score; }).slice(0, 3)
+        .forEach(function (p) {
+          var li = document.createElement('li');
+          var nm = document.createElement('span'); nm.textContent = String(p.label || (p.num != null ? '#' + p.num : ''));
+          var sc = document.createElement('b'); sc.textContent = String(p.score);
+          li.appendChild(nm); li.appendChild(sc); ol.appendChild(li);
+        });
+      return ol.children.length;
+    }
+    var nl = fill('listL', Lt.side), nr = fill('listR', Rt.side);
+    txt('topL', L.top); txt('topR', L.top);
+    $('top').style.display = (nl + nr) > 0 ? 'grid' : 'none';
+    // 상태 표시
+    var pill = $('pill'); pill.style.display = 'inline-block';
+    if (s.st === 'final') { pill.className = 'pill final'; pill.textContent = L.final; }
+    else { pill.className = 'pill'; pill.innerHTML = '<span class="dot"></span>'; pill.appendChild(document.createTextNode(L.live)); }
+    document.title = Lt.name + ' ' + Lt.cur + ':' + Rt.cur + ' ' + Rt.name + ' — RallyStat';
+  }
+
+  function schedule(ms) { if (stopped) return; clearTimeout(timer); timer = setTimeout(poll, ms); }
+  function stop() { stopped = true; clearTimeout(timer); }
+
+  function poll() {
+    if (document.hidden) return; // 다시 보이면 visibilitychange에서 재개
+    var ctl = window.AbortController ? new AbortController() : null;
+    var to = setTimeout(function () { if (ctl) ctl.abort(); }, 8000);
+    fetch(SB_URL + rpc, {
+      method: 'POST', cache: 'no-store', signal: ctl ? ctl.signal : undefined,
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_code: code })
+    }).then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function (d) {
+        clearTimeout(to); fails = 0;
+        if (d == null) {
+          // 관전 코드가 아님(공동 기록 코드 등) 또는 없음 → 예전 앱 안내
+          if (everOk) { showMsg(L.ended); $('board').style.display = 'none'; $('pill').style.display = 'none'; stop(); return; }
+          showMsg(code.length === 6 ? L.notFound : ''); guideMode(false); tryOpenApp(); stop(); return;
+        }
+        if (d.off === true) {
+          showMsg(L.ended); $('board').style.display = 'none'; $('pill').style.display = 'none'; guideMode(true); stop(); return;
+        }
+        var s = d.snapshot;
+        if (!s) { showMsg(L.loading); schedule(3000); return; }
+        everOk = true; showMsg('');
+        $('board').style.display = 'block'; guideMode(true);
+        if (typeof d.seq !== 'number' || d.seq !== lastSeq) { lastSeq = d.seq; render(s); }
+        var meta = $('meta'); meta.className = 'meta'; meta.textContent = fmt(L.updated, 't', clock());
+        // 끝난 경기는 기록 수정이 올 수 있어 느리게 계속
+        schedule(s.st === 'final' ? 20000 : 2500);
+      })
+      .catch(function () {
+        clearTimeout(to); fails++;
+        if (everOk) { var meta = $('meta'); meta.className = 'meta warn'; meta.textContent = L.offline; }
+        else if (fails >= 3) { showMsg(L.offline); }
+        schedule(Math.min(15000, 2500 * Math.pow(1.6, fails)));
+      });
+  }
+
+  if (rpc) {
+    showMsg(L.loading);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden && !stopped) schedule(0); });
+    poll();
+  } else {
+    // 코드 없음·형식 다름 → 예전처럼 앱 열기 1회 시도
+    tryOpenApp();
+  }
 </script>
 </body>
 </html>
