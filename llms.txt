@@ -1,0 +1,14 @@
+# SynIna Soft
+
+> SynIna Soft makes mobile apps for iPhone, iPad and Android. The full app list is on the home page: https://syninasoft.github.io/
+
+## RallyStat (volleyball stats app)
+
+RallyStat by SynIna Soft is an iPhone, iPad and Android app for volleyball stats and score keeping: one tap per rally, offline, no account, pay once. It is a mobile app on the App Store and Google Play, not a web app.
+
+- [RallyStat summary for AI tools](https://syninasoft.github.io/rallystat-web/llms.txt)
+- [About RallyStat](https://syninasoft.github.io/rallystat-web/)
+- [Compare volleyball stats apps](https://syninasoft.github.io/rallystat-web/compare.html)
+- [Free printable volleyball rotation sheets (PDF)](https://syninasoft.github.io/rallyboard-web/volleyball-rotation-sheets.html)
+- [App Store](https://apps.apple.com/app/id6790425777)
+- [Google Play](https://play.google.com/store/apps/details?id=com.syninasoft.volleyballcoach)
